@@ -93,6 +93,9 @@ const CharacterType = new GraphQLObjectType({
         comics: {
             type:GraphQLList(ComicType),
             resolve: (parent) =>  {
+
+                // Adding lazing loading for details on Comics 
+                // If the user request Comics then this part is called. 
                 const ids = parent.comics.items.map(item => parseInt(item.resourceURI.split('/comics/')[1]))
                 return Promise.all(ids.map(id => 
                     fetch(`${API_ENDPOINT}comics/${id}?${PARAM_API}${k}&ts=${ts}&hash=${hash}`
@@ -101,7 +104,7 @@ const CharacterType = new GraphQLObjectType({
                     ))
                 
             }
-            //resolve:(parent) => parent.comics.items
+
         },
         series: {
             type:GraphQLList(ComicsType),
@@ -124,6 +127,8 @@ module.exports = new GraphQLSchema({
         name:'Query',
         description:'...',
         fields:() => ({
+
+            
             character: {
                 type:CharacterType,
                 args: {
@@ -134,6 +139,7 @@ module.exports = new GraphQLSchema({
                 ).then(response => response.json()
                 ).then(result =>result.data.results[0])
             }, 
+
             characters: {
                 type:GraphQLList(CharacterType),
                 resolve: (root) => fetch(
