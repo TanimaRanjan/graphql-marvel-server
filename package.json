@@ -1,0 +1,26 @@
+{
+  "name": "graphql-marvel-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "serve.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanimaRanjan/graphql-marvel-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TanimaRanjan/graphql-marvel-server/issues"
+  },
+  "homepage": "https://github.com/TanimaRanjan/graphql-marvel-server#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^15.0.0",
+    "md5": "^2.2.1",
+    "node-fetch": "^2.6.0"
+  }
+}
