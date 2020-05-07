@@ -90,6 +90,10 @@ const CharacterType = new GraphQLObjectType({
         description: {
             type:GraphQLString
         },
+        imageURL : {
+            type:GraphQLString,
+            resolve: (parent) => `${parent.thumbnail.path}.${parent.thumbnail.extension}`
+        },
         comics: {
             type:GraphQLList(ComicType),
             resolve: (parent) =>  {
@@ -135,18 +139,48 @@ module.exports = new GraphQLSchema({
                     id: {type:GraphQLInt }
                 }, 
                 resolve: (root , args ) => fetch(
-                    `${API_ENDPOINT}${type}/${args.id}?&limit=100&${PARAM_API}${k}&ts=${ts}&hash=${hash}`
+                    `${API_ENDPOINT}${type}/${args.id}?limit=100&${PARAM_API}${k}&ts=${ts}&hash=${hash}`
                 ).then(response => response.json()
-                ).then(result =>result.data.results[0])
+                ).then(result => {
+                    console.log('Getting characters')
+                    return result.data.results[0]
+                } )
             }, 
 
             characters: {
                 type:GraphQLList(CharacterType),
                 resolve: (root) => fetch(
-                    `${API_ENDPOINT}${type}?&limit=100&${PARAM_API}${k}&ts=${ts}&hash=${hash}`
+                    `${API_ENDPOINT}${type}?limit=100&${PARAM_API}${k}&ts=${ts}&hash=${hash}`
                 ).then(response => response.json()
-                ).then(result =>result.data.results)
-            }
+                ).then(result => { 
+                    console.log('Getting all characters')
+                    return result.data.results
+                })
+                
+            },
+
+            characterNameStartsWith: {
+                type:GraphQLList(CharacterType),
+                args: {
+                    name: {type:GraphQLString }
+                }, 
+                resolve: (root , args) => fetch(
+                    `${API_ENDPOINT}${type}?nameStartsWith=${args.name}&limit=100&${PARAM_API}${k}&ts=${ts}&hash=${hash}`
+                ).then(response => response.json()
+                ).then(result => result.data.results)
+            }, 
+
+            characterByName: {
+                type:CharacterType,
+                args: {
+                    name: {type:GraphQLString }
+                }, 
+                resolve: (root , args ) => fetch(
+                    `${API_ENDPOINT}${type}?name=${args.name}&limit=100&${PARAM_API}${k}&ts=${ts}&hash=${hash}`
+                ).then(response => response.json()
+                ).then(result =>result.data.results[0])
+            }, 
+
         })
 
     })
